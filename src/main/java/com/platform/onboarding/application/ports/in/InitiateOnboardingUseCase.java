@@ -11,9 +11,9 @@ public interface InitiateOnboardingUseCase {
     /**
      * Command to initiate onboarding process.
      *
-     * @param companyName The name of the company
-     * @param adminName The name of the admin user
-     * @param adminEmail The email of the admin user
+     * @param companyName The name of the company (must not be null or blank)
+     * @param adminName The name of the admin user (must not be null or blank)
+     * @param adminEmail The email of the admin user (must not be null or blank)
      */
     record InitiateOnboardingCommand(
         String companyName,
