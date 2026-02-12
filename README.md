@@ -12,7 +12,7 @@ Plataforma de onboarding multi-tenant construída com **DDD + Hexagonal Architec
 
 ## 🛠️ Stack Tecnológica
 
-- ☕ Java 21
+- ☕ Java 17
 - 🍃 Spring Boot 3.2.2
 - 🗄️ PostgreSQL 16 (Multi-Tenancy)
 - 🔐 Keycloak 23
@@ -32,7 +32,7 @@ Plataforma de onboarding multi-tenant construída com **DDD + Hexagonal Architec
 
 ### Pré-requisitos
 
-- JDK 21+
+- JDK 17+
 - Docker & Docker Compose
 - Maven 3.8+
 
