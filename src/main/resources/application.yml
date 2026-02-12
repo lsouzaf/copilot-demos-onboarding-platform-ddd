@@ -1,0 +1,61 @@
+server:
+  port: 8082
+
+spring:
+  application:
+    name: onboarding-platform
+  datasource:
+    url: jdbc:postgresql://localhost:5432/platform_master
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        multiTenancy: SCHEMA
+        multi_tenant_connection_provider: com.platform.infrastructure.multitenancy.MultiTenantConnectionProviderImpl
+        tenant_identifier_resolver: com.platform.infrastructure.multitenancy.CurrentTenantIdentifierResolverImpl
+        format_sql: true
+    show-sql: false
+    open-in-view: false
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+    locations: classpath:db/migration
+    schemas: public
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: onboarding-platform
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring.json.trusted.packages: "com.platform.*"
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+
+keycloak:
+  auth-server-url: http://localhost:8080
+  master-realm: master
+  admin-username: admin
+  admin-password: admin
+  template-realm: realm-template
+
+tenant:
+  template-schema: template_schema
+  default-tenant: public
+
+email:
+  from: noreply@platform.com
+  service-url: http://localhost:8082
+
+logging:
+  level:
+    com.platform: INFO
+    org.springframework.kafka: INFO
+    org.hibernate: INFO
