@@ -86,12 +86,12 @@ public class MultiTenantConnectionProviderImpl implements MultiTenantConnectionP
             throw new IllegalArgumentException("Tenant identifier cannot be null or empty");
         }
         
-        if (!tenantIdentifier.matches("^[a-zA-Z0-9_]+$")) {
-            throw new IllegalArgumentException("Invalid tenant identifier: must contain only alphanumeric characters and underscores");
+        if (!tenantIdentifier.matches("^[a-zA-Z0-9_-]+$")) {
+            throw new IllegalArgumentException("Invalid tenant identifier: must contain only alphanumeric characters, underscores, and hyphens");
         }
     }
     
     private String sanitizeTenantIdentifier(String identifier) {
-        return identifier.replaceAll("[^a-zA-Z0-9_]", "");
+        return identifier.replaceAll("[^a-zA-Z0-9_-]", "");
     }
 }

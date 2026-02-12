@@ -92,8 +92,8 @@ public class SchemaService {
             throw new IllegalArgumentException("Schema name cannot be null or empty");
         }
         
-        if (!schemaName.matches("^[a-zA-Z0-9_]+$")) {
-            throw new IllegalArgumentException("Invalid schema name: must contain only alphanumeric characters and underscores");
+        if (!schemaName.matches("^[a-zA-Z0-9_-]+$")) {
+            throw new IllegalArgumentException("Invalid schema name: must contain only alphanumeric characters, underscores, and hyphens");
         }
         
         if (schemaName.length() > 63) {
@@ -102,7 +102,7 @@ public class SchemaService {
     }
     
     private String sanitizeIdentifier(String identifier) {
-        return identifier.replaceAll("[^a-zA-Z0-9_]", "");
+        return identifier.replaceAll("[^a-zA-Z0-9_-]", "");
     }
     
     private String sanitizeString(String value) {

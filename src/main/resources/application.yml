@@ -16,8 +16,8 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
         multiTenancy: SCHEMA
-        multi_tenant_connection_provider: com.platform.infrastructure.multitenancy.MultiTenantConnectionProvider
-        tenant_identifier_resolver: com.platform.infrastructure.multitenancy.CurrentTenantIdentifierResolver
+        multi_tenant_connection_provider: com.platform.infrastructure.multitenancy.MultiTenantConnectionProviderImpl
+        tenant_identifier_resolver: com.platform.infrastructure.multitenancy.CurrentTenantIdentifierResolverImpl
         format_sql: true
     show-sql: false
     open-in-view: false

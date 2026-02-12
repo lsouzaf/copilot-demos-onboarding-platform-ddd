@@ -32,7 +32,7 @@ public class KafkaConsumerConfig {
         configProps.put(ConsumerConfig.GROUP_ID_CONFIG, groupId);
         configProps.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
         configProps.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
-        configProps.put(JsonDeserializer.TRUSTED_PACKAGES, "*");
+        configProps.put(JsonDeserializer.TRUSTED_PACKAGES, "com.platform.*");
         configProps.put(JsonDeserializer.USE_TYPE_INFO_HEADERS, false);
         
         return new DefaultKafkaConsumerFactory<>(configProps);
