@@ -1,7 +1,7 @@
 package com.platform.infrastructure.saga;
 
 import com.platform.company.application.CompanyService;
-import com.platform.company.application.ports.in.CreateCompanyCommand;
+import com.platform.company.application.ports.in.CreateCompanyUseCase.CreateCompanyCommand;
 import com.platform.identity.application.ports.out.KeycloakPort;
 import com.platform.infrastructure.kafka.KafkaEventPublisher;
 import com.platform.infrastructure.multitenancy.SchemaService;

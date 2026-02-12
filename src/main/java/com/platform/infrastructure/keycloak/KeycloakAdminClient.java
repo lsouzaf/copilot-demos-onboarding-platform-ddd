@@ -6,7 +6,7 @@ import org.keycloak.admin.client.resource.RealmsResource;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
+import jakarta.annotation.PostConstruct;
 
 /**
  * Keycloak admin client for managing realms and users.

@@ -2,7 +2,6 @@ package com.platform.infrastructure.config;
 
 import com.platform.infrastructure.multitenancy.CurrentTenantIdentifierResolverImpl;
 import com.platform.infrastructure.multitenancy.MultiTenantConnectionProviderImpl;
-import org.hibernate.MultiTenancyStrategy;
 import org.hibernate.cfg.AvailableSettings;
 import org.hibernate.context.spi.CurrentTenantIdentifierResolver;
 import org.hibernate.engine.jdbc.connections.spi.MultiTenantConnectionProvider;
@@ -49,7 +48,6 @@ public class HibernateConfig {
         properties.put(AvailableSettings.DIALECT, dialect);
         properties.put(AvailableSettings.SHOW_SQL, showSql);
         properties.put(AvailableSettings.FORMAT_SQL, formatSql);
-        properties.put(AvailableSettings.MULTI_TENANT, MultiTenancyStrategy.SCHEMA);
         properties.put(AvailableSettings.MULTI_TENANT_CONNECTION_PROVIDER, multiTenantConnectionProvider);
         properties.put(AvailableSettings.MULTI_TENANT_IDENTIFIER_RESOLVER, currentTenantIdentifierResolver);
         

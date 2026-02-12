@@ -36,17 +36,18 @@ public class MultiTenantConnectionProviderImpl implements MultiTenantConnectionP
     }
     
     @Override
-    public Connection getConnection(String tenantIdentifier) throws SQLException {
-        logger.debug("Getting connection for tenant: {}", tenantIdentifier);
+    public Connection getConnection(Object tenantIdentifier) throws SQLException {
+        String tenantId = tenantIdentifier.toString();
+        logger.debug("Getting connection for tenant: {}", tenantId);
         
-        validateTenantIdentifier(tenantIdentifier);
+        validateTenantIdentifier(tenantId);
         
         Connection connection = getAnyConnection();
         
         try {
-            connection.createStatement().execute("SET search_path TO " + sanitizeTenantIdentifier(tenantIdentifier));
+            connection.createStatement().execute("SET search_path TO " + sanitizeTenantIdentifier(tenantId));
         } catch (SQLException e) {
-            logger.error("Failed to set search_path to {}", tenantIdentifier, e);
+            logger.error("Failed to set search_path to {}", tenantId, e);
             throw e;
         }
         
@@ -54,8 +55,9 @@ public class MultiTenantConnectionProviderImpl implements MultiTenantConnectionP
     }
     
     @Override
-    public void releaseConnection(String tenantIdentifier, Connection connection) throws SQLException {
-        logger.debug("Releasing connection for tenant: {}", tenantIdentifier);
+    public void releaseConnection(Object tenantIdentifier, Connection connection) throws SQLException {
+        String tenantId = tenantIdentifier.toString();
+        logger.debug("Releasing connection for tenant: {}", tenantId);
         
         try {
             connection.createStatement().execute("SET search_path TO public");
