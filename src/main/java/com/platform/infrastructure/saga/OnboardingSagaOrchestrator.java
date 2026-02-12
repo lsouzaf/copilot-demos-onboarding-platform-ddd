@@ -121,7 +121,7 @@ public class OnboardingSagaOrchestrator {
             String realm = event.getTenantId().getValue();
             String username = initiatedEvent.getAdminInfo().getAdminName();
             String email = initiatedEvent.getAdminInfo().getAdminEmail().getValue();
-            String password = "ChangeMe123!";
+            String password = generateSecurePassword();
             
             keycloakPort.createUser(realm, username, email, password);
             
@@ -212,5 +212,35 @@ public class OnboardingSagaOrchestrator {
     
     private OnboardingInitiatedEvent findInitiatedEvent(java.util.UUID onboardingId) {
         return null;
+    }
+    
+    private String generateSecurePassword() {
+        String upperCase = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        String lowerCase = "abcdefghijklmnopqrstuvwxyz";
+        String digits = "0123456789";
+        String special = "!@#$%^&*";
+        String allChars = upperCase + lowerCase + digits + special;
+        
+        java.security.SecureRandom random = new java.security.SecureRandom();
+        StringBuilder password = new StringBuilder(16);
+        
+        password.append(upperCase.charAt(random.nextInt(upperCase.length())));
+        password.append(lowerCase.charAt(random.nextInt(lowerCase.length())));
+        password.append(digits.charAt(random.nextInt(digits.length())));
+        password.append(special.charAt(random.nextInt(special.length())));
+        
+        for (int i = 4; i < 16; i++) {
+            password.append(allChars.charAt(random.nextInt(allChars.length())));
+        }
+        
+        char[] passwordArray = password.toString().toCharArray();
+        for (int i = passwordArray.length - 1; i > 0; i--) {
+            int j = random.nextInt(i + 1);
+            char temp = passwordArray[i];
+            passwordArray[i] = passwordArray[j];
+            passwordArray[j] = temp;
+        }
+        
+        return new String(passwordArray);
     }
 }

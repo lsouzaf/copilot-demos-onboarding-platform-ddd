@@ -39,10 +39,12 @@ public class MultiTenantConnectionProviderImpl implements MultiTenantConnectionP
     public Connection getConnection(String tenantIdentifier) throws SQLException {
         logger.debug("Getting connection for tenant: {}", tenantIdentifier);
         
+        validateTenantIdentifier(tenantIdentifier);
+        
         Connection connection = getAnyConnection();
         
         try {
-            connection.createStatement().execute("SET search_path TO " + tenantIdentifier);
+            connection.createStatement().execute("SET search_path TO " + sanitizeTenantIdentifier(tenantIdentifier));
         } catch (SQLException e) {
             logger.error("Failed to set search_path to {}", tenantIdentifier, e);
             throw e;
@@ -77,5 +79,19 @@ public class MultiTenantConnectionProviderImpl implements MultiTenantConnectionP
     @Override
     public <T> T unwrap(Class<T> unwrapType) {
         return null;
+    }
+    
+    private void validateTenantIdentifier(String tenantIdentifier) {
+        if (tenantIdentifier == null || tenantIdentifier.isBlank()) {
+            throw new IllegalArgumentException("Tenant identifier cannot be null or empty");
+        }
+        
+        if (!tenantIdentifier.matches("^[a-zA-Z0-9_]+$")) {
+            throw new IllegalArgumentException("Invalid tenant identifier: must contain only alphanumeric characters and underscores");
+        }
+    }
+    
+    private String sanitizeTenantIdentifier(String identifier) {
+        return identifier.replaceAll("[^a-zA-Z0-9_]", "");
     }
 }

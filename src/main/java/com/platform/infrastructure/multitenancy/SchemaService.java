@@ -32,10 +32,13 @@ public class SchemaService {
     public void createSchema(String schemaName, String templateSchema) {
         logger.info("Creating schema {} from template {}", schemaName, templateSchema);
         
+        validateSchemaName(schemaName);
+        validateSchemaName(templateSchema);
+        
         try (Connection connection = dataSource.getConnection();
              Statement statement = connection.createStatement()) {
             
-            statement.execute("CREATE SCHEMA IF NOT EXISTS " + schemaName);
+            statement.execute("CREATE SCHEMA IF NOT EXISTS " + sanitizeIdentifier(schemaName));
             
             String copyTablesQuery = String.format(
                 "DO $$ " +
@@ -46,7 +49,7 @@ public class SchemaService {
                 "    EXECUTE 'CREATE TABLE %s.' || quote_ident(r.tablename) || ' (LIKE %s.' || quote_ident(r.tablename) || ' INCLUDING ALL)'; " +
                 "  END LOOP; " +
                 "END $$;",
-                templateSchema, schemaName, templateSchema
+                sanitizeString(templateSchema), sanitizeIdentifier(schemaName), sanitizeString(templateSchema)
             );
             
             statement.execute(copyTablesQuery);
@@ -70,15 +73,39 @@ public class SchemaService {
             throw new IllegalArgumentException("Cannot delete public schema");
         }
         
+        validateSchemaName(schemaName);
+        
         try (Connection connection = dataSource.getConnection();
              Statement statement = connection.createStatement()) {
             
-            statement.execute("DROP SCHEMA IF EXISTS " + schemaName + " CASCADE");
+            statement.execute("DROP SCHEMA IF EXISTS " + sanitizeIdentifier(schemaName) + " CASCADE");
             
             logger.info("Successfully deleted schema {}", schemaName);
         } catch (SQLException e) {
             logger.error("Failed to delete schema {}", schemaName, e);
             throw new RuntimeException("Failed to delete schema: " + schemaName, e);
         }
+    }
+    
+    private void validateSchemaName(String schemaName) {
+        if (schemaName == null || schemaName.isBlank()) {
+            throw new IllegalArgumentException("Schema name cannot be null or empty");
+        }
+        
+        if (!schemaName.matches("^[a-zA-Z0-9_]+$")) {
+            throw new IllegalArgumentException("Invalid schema name: must contain only alphanumeric characters and underscores");
+        }
+        
+        if (schemaName.length() > 63) {
+            throw new IllegalArgumentException("Schema name too long: maximum 63 characters");
+        }
+    }
+    
+    private String sanitizeIdentifier(String identifier) {
+        return identifier.replaceAll("[^a-zA-Z0-9_]", "");
+    }
+    
+    private String sanitizeString(String value) {
+        return value.replaceAll("'", "''");
     }
 }
